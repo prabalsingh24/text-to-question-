@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .views.text_to_question_view import TextToQuestionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('prabal/', TextToQuestionView.as_view())
 ]

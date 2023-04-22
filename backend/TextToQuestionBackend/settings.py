@@ -9,11 +9,13 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+TEXT_TO_SPEECH_MODEL_DIR = os.path.join(BASE_DIR, 'TextToQuestionBackend/checkpoint-11000')
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +28,6 @@ SECRET_KEY = 'django-insecure-epa6rau!6v=u-9t@(goq8ndb=v=jj^b^r&6*qp%oy)-f6$dmr_
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
