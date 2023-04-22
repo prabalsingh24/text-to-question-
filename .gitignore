@@ -1,0 +1,22 @@
+/backend/myvirutalenv/
+
+#virtual env
+backend/myvirtualenv/
+# Env
+.env
+myvenv/
+venv/
+
+# Database
+backend/db.sqlite3
+
+backend/myvirutalenv/
+backend/TextToQuestionBackend/__pychache_/
+
+# Python
+*.pyc
+*~
+__pycache__
+
+# Env
+.env
