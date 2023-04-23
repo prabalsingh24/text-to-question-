@@ -11,7 +11,8 @@ import json
 class TextToQuestionView(View):
     def post(self, request):
         try:
-            input_text = request.POST.get('text')
+            request_body = json.loads(request.body)
+            input_text = request_body['text']
             model = TextToQuestionModel()
             entities = model.get_entities(input_text)
             questions_generated = model.generate_question(input_text, entities)
@@ -23,3 +24,14 @@ class TextToQuestionView(View):
 
         except Exception as e:
             return JsonResponse({"error": "error found in backend "}, status=500)
+
+    def get(self, request):
+        input_text = "i am 22 years old"
+        model = TextToQuestionModel()
+        entities = model.get_entities(input_text)
+        questions_generated = model.generate_question(input_text, entities)
+        response = {
+            "input_text": input_text,
+            "questions_generated": questions_generated
+        }
+        return JsonResponse(response, status=200)
