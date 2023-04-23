@@ -20,3 +20,9 @@ __pycache__
 
 # Env
 .env
+
+backend/TextToQuestionBackend/checkpoint-11000
+frontend/texttoquestionfrontend/node_modules
+frontend/texttoquestionfrontend/.pnp
+.pnp.js
+backend/TextToQuestionBackend/.DS_Store
