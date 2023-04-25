@@ -21,9 +21,9 @@ class ClassComponent extends Component {
         if (this.state.loading === true) {
             return false;
         }
-        if (this.text.value.length > 500) {
+        if (this.text.value.length > 1000) {
             this.setState({
-                error: "Error: Character limit 500"
+                error: "Error: Character limit 1000"
             })
             return false;
         }
@@ -131,7 +131,7 @@ class ClassComponent extends Component {
                             this.state.loading ? <LoadingSpinner/> : null
                         }
                     </Col>
-                    <Col>
+                    <Col className="error-bottom">
                         {this.state.error != null ? this.state.error : null}
                     </Col>
                 </Row>
