@@ -1,6 +1,5 @@
 import {Component} from "react";
-import {Button, Form, Row, Col, InputGroup} from "react-bootstrap";
-import request from 'superagent'
+import {Button, Form, Row, Col} from "react-bootstrap";
 import LoadingSpinner from "./LoadingSpinner";
 
 
@@ -8,73 +7,139 @@ class ClassComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            questions: [],
-            loading: false
+            questionsAndAnswers: [],
+            showAnswer: [],
+            loading: false,
+            error: null
         }
         this.handleButtonClick = this.handleButtonClick.bind(this)
+        this.handleShowOrHideAnswer = this.handleShowOrHideAnswer.bind(this)
+        this.shouldSendRequest = this.shouldSendRequest.bind(this)
+    }
+
+    shouldSendRequest() {
+        if (this.state.loading === true) {
+            return false;
+        }
+        if (this.text.value.length > 500) {
+            this.setState({
+                error: "Error: Character limit 500"
+            })
+            return false;
+        }
+        this.setState({
+            error: null
+        })
+        return true;
+
     }
 
     async handleButtonClick() {
-        if (this.state.loading === true) {
-            console.log("loading is happneing right now")
-            return;
+        if(!this.shouldSendRequest()) {
+            return
         }
-        const submissionUrl = 'http://localhost:8000/prabal/';
+
         const text = this.text.value
+        const submissionUrl = 'http://localhost:8000/prabal/';
 
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
         };
-        this.setState({loading: true})
+        this.setState({loading: true, questions: []})
         fetch(submissionUrl, requestOptions)
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 this.setState({
-                    questions: data.questions_generated,
+                    questionsAndAnswers: data?.questions_and_answers ? data.questions_and_answers : [],
+                    showAnswer: data?.questions_and_answers ? new Array(data.questions_and_answers.length).fill(false) : [],
+                    loading: false,
+                })
+            }).catch(error => {
+                this.setState({
+                    error: "Error fetching the response from the backend",
                     loading: false
                 })
-            });
+        });
+    }
+
+    handleShowOrHideAnswer(index) {
+        const newShowAnswerArray = this.state.showAnswer
+        newShowAnswerArray[index] = !this.state.showAnswer[index]
+        this.setState({
+            showAnswer: newShowAnswerArray
+        })
     }
 
 
+
     render() {
-        return (
+        const questionsGenerated = (
             <div>
-                <Row>
-                    <Col lg={{offset: 3, span: 6}}>
-                        <form
-                            className="form-horizontal whole-page-form"
-                            role="search"
-                        >
-                            <Form.Group>
-                                <InputGroup>
-                                    <Form.Control
-                                        name="q"
-                                        type="text"
-                                        ref={(ref) => this.text = ref}
-                                    />
-                                </InputGroup>
-                            </Form.Group>
+                {
+                    this.state.questionsAndAnswers.map((qAndA, index) => (
+                        <div className="generated-questions">
+                            <Row className="question">
+                                {index + 1}: {qAndA['question']}
+                            </Row>
                             <Button
-                                onClick={this.handleButtonClick}
-                            >
-                                Create questions
+                                onClick={() => this.handleShowOrHideAnswer(index)}>
+                                {this.state.showAnswer[index] ? "Hide Answer" : "Show Answer"}
                             </Button>
-                        </form>
-                        The following questions was created from that text.
-                        {
-                            this.state.questions[0]
-                        }
+                            <Row>
+                                {
+                                    this.state.showAnswer[index] ? qAndA['answer'] : null
+                                }
+                            </Row>
+                        </div>
+                    ))
+                }
+            </div>
+        )
+        return (
+            <div className="spinner-container">
+                <Row className="header-top">
+                    <strong>
+                        Enter some text in this and this will generate some questions for you
+                    </strong>
+                </Row>
+                <Row>
+                    <Form>
+                        <Form.Control
+                            onSubmit={this.handleButtonClick}
+                            as="textarea"
+                            className="textarea-box"
+                            ref={(ref) => this.text = ref}
+                        />
+                    </Form>
+                    <div className="button-container">
+                        <Button
+                            onClick={this.handleButtonClick}
+                            className="button-generate-question"
+                        >
+                            {this.state.loading ? 'Loading... This might take a few seconds' : 'Click to generate questions'}
+                        </Button>
+                    </div>
+
+                </Row>
+                <Row>
+                    <Col>
+                        {questionsGenerated}
                         {
                             this.state.loading ? <LoadingSpinner/> : null
                         }
+                    </Col>
+                    <Col>
+                        {this.state.error != null ? this.state.error : null}
                     </Col>
                 </Row>
             </div>
         );
     }
+
+
 }
 
 export default ClassComponent;

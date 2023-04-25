@@ -5,19 +5,31 @@ from transformers import AutoTokenizer
 import spacy
 from django.conf import settings
 
-class TextToQuestionModel:
 
+class TextToQuestionModel:
+    __instance = None
     def __init__(self):
+        TextToQuestionModel.__instance = self
         self.ckpt_path = settings.TEXT_TO_SPEECH_MODEL_DIR
         self.model = AutoModelForSeq2SeqLM.from_pretrained(self.ckpt_path)
 
         self.model_checkpoint = "t5-base"
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_checkpoint)
 
+    @staticmethod
+    def getInstance():
+        if TextToQuestionModel.__instance == None:
+            return TextToQuestionModel()
+        return TextToQuestionModel.__instance
+
     def run_model(self, input_string, model, tokenizer, device, **generator_args):
+        print("inside run model")
         input_ids = tokenizer.encode(input_string, return_tensors="pt").to(torch.device(device))
         res = model.generate(
             input_ids, **generator_args)
+        print("response is here")
+        print(res)
+        print(type(res))
         output = tokenizer.batch_decode(res, skip_special_tokens=True)
         return output
 
@@ -31,5 +43,18 @@ class TextToQuestionModel:
                 entities.append(entity)
         return sorted(entities, key=lambda e: e.text)
 
-    def generate_question(self, context, answer):
-        return self.run_model(f"generate question: {answer} context: {context}", self.model, self.tokenizer, 'cpu', max_length=50)
+    def generate_question(self, context, answers):
+        questions = []
+        questions_and_answers = []
+        for answer in answers:
+            try:
+                question = self.run_model(f"generate question: {answer} context: {context}", self.model, self.tokenizer,
+                                          'cpu', max_length=50)[0]
+                questions.append(question)
+                questions_and_answers.append({'question': question, 'answer': answer.text})
+            except Exception as e:
+                print(e)
+                print("some error")
+        print(questions_and_answers)
+        print("returning some stuff")
+        return questions_and_answers
