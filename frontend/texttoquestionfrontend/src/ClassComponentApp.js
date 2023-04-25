@@ -37,7 +37,6 @@ class ClassComponent extends Component {
             error: null
         })
         return true;
-
     }
 
     async handleButtonClick() {
@@ -46,7 +45,7 @@ class ClassComponent extends Component {
         }
 
         const text = this.text.value
-        const submissionUrl = 'http://3.8.15.89:3000/prabal/';
+        const submissionUrl = 'http://3.8.15.89:3000/textToQuestion/';
 
         const requestOptions = {
             method: 'POST',
@@ -78,7 +77,6 @@ class ClassComponent extends Component {
             showAnswer: newShowAnswerArray
         })
     }
-
 
 
     render() {

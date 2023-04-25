@@ -19,5 +19,5 @@ from .views.text_to_question_view import TextToQuestionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('prabal/', TextToQuestionView.as_view())
+    path('textToQuestion/', TextToQuestionView.as_view())
 ]
