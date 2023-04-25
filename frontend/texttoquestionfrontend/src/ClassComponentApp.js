@@ -40,7 +40,7 @@ class ClassComponent extends Component {
         }
 
         const text = this.text.value
-        const submissionUrl = 'http://localhost:8000/prabal/';
+        const submissionUrl = 'http://3.8.15.89:3000/prabal/';
 
         const requestOptions = {
             method: 'POST',
