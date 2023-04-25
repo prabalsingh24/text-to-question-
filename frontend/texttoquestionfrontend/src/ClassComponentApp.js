@@ -23,11 +23,17 @@ class ClassComponent extends Component {
         }
         if (this.text.value.length > 1000) {
             this.setState({
-                error: "Error: Character limit 1000"
+                error: "Error: Character limit 1000",
+                questionAndAnswers: [],
+                showAnswer: [],
+                loading: false
             })
             return false;
         }
         this.setState({
+            questionsAndAnswers: [],
+            showAnswer: [],
+            loading: true,
             error: null
         })
         return true;
@@ -47,11 +53,9 @@ class ClassComponent extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
         };
-        this.setState({loading: true, questions: []})
         fetch(submissionUrl, requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 this.setState({
                     questionsAndAnswers: data?.questions_and_answers ? data.questions_and_answers : [],
                     showAnswer: data?.questions_and_answers ? new Array(data.questions_and_answers.length).fill(false) : [],
@@ -59,8 +63,10 @@ class ClassComponent extends Component {
                 })
             }).catch(error => {
                 this.setState({
-                    error: "Error fetching the response from the backend",
-                    loading: false
+                    error: "Error fetching the response from the backend" + error,
+                    loading: false,
+                    questionAndAnswers: [],
+                    showAnswer: []
                 })
         });
     }
