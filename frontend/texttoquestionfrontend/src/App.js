@@ -3,7 +3,7 @@ import {Button, Form, Row, Col} from "react-bootstrap";
 import LoadingSpinner from "./LoadingSpinner";
 
 
-class ClassComponent extends Component {
+class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -90,7 +90,9 @@ class ClassComponent extends Component {
                             </Row>
                             <Button
                                 onClick={() => this.handleShowOrHideAnswer(index)}>
-                                {this.state.showAnswer[index] ? "Hide Answer" : "Show Answer"}
+                                {
+                                    this.state.showAnswer[index] ? "Hide Answer" : "Show Answer"
+                                }
                             </Button>
                             <Row>
                                 {
@@ -146,4 +148,4 @@ class ClassComponent extends Component {
 
 }
 
-export default ClassComponent;
+export default App;

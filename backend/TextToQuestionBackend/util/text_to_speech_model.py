@@ -23,7 +23,6 @@ class TextToQuestionModel:
         return TextToQuestionModel.__instance
 
     def run_model(self, input_string, model, tokenizer, device, **generator_args):
-        print("inside run model")
         input_ids = tokenizer.encode(input_string, return_tensors="pt").to(torch.device(device))
         res = model.generate(
             input_ids, **generator_args)
@@ -51,4 +50,7 @@ class TextToQuestionModel:
                 questions_and_answers.append({'question': question, 'answer': answer.text})
             except Exception as e:
                 print(e)
+
+        print("question answers generated")
+        print(questions_and_answers)
         return questions_and_answers
