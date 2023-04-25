@@ -54,3 +54,7 @@ class TextToQuestionModel:
         print("question answers generated")
         print(questions_and_answers)
         return questions_and_answers
+
+    def get_questions_answers_from_text(self, input_text):
+        entities = self.model.get_entities(input_text)
+        return self.model.generate_question(input_text, entities)

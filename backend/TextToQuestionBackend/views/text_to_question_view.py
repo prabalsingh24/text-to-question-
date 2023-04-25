@@ -15,8 +15,8 @@ class TextToQuestionView(View):
             request_body = json.loads(request.body)
             input_text = request_body['text']
             model = TextToQuestionModel.getInstance()
-            entities = model.get_entities(input_text)
-            questions_answers_generated = model.generate_question(input_text, entities)
+            questions_answers_generated = model.get_questions_answers_from_text(input_text)
+
             response = {
                 "input_text": input_text,
                 "questions_and_answers": questions_answers_generated
