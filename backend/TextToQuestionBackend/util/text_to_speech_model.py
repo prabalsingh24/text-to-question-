@@ -27,9 +27,6 @@ class TextToQuestionModel:
         input_ids = tokenizer.encode(input_string, return_tensors="pt").to(torch.device(device))
         res = model.generate(
             input_ids, **generator_args)
-        print("response is here")
-        print(res)
-        print(type(res))
         output = tokenizer.batch_decode(res, skip_special_tokens=True)
         return output
 
@@ -54,7 +51,4 @@ class TextToQuestionModel:
                 questions_and_answers.append({'question': question, 'answer': answer.text})
             except Exception as e:
                 print(e)
-                print("some error")
-        print(questions_and_answers)
-        print("returning some stuff")
         return questions_and_answers
